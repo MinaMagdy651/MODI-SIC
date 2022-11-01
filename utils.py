@@ -33,10 +33,15 @@ def return_df(program):
             temp = temp[: 2] 
         
         # RSUB instruction and end no label
-        if temp[0] == 'RSUB' or temp[0] == 'END':
+        if temp[0] == 'RSUB':
             label = ' '
             mnemonic = temp[0] 
             value = ' '
+        # END INSTRUCTION
+        elif temp[0]  == 'END':
+            label = ' '
+            mnemonic = temp[0]
+            value = temp[1]
 
         # RSUB instruction with label
         elif temp[1] == 'RSUB':

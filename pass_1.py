@@ -56,5 +56,5 @@ def symbol_table(df):
     # Ignoring the first row 
     for ind in range(1, df.index.stop):
         if df.Label[ind] != ' ':
-            list.append([df.Location_Counter[ind], df.Label[ind]])
+            list.append([df.Label[ind], df.Location_Counter[ind]])
     return list
