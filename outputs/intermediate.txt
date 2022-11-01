@@ -34,4 +34,4 @@ EXIT    	STX     	LENGTH
 INPUT   	BYTE    	X'F1'   
 MAXLEN  	WORD    	4096    
 TEST    	FLOAT   	X       
-		END     	 
+		END     	1000

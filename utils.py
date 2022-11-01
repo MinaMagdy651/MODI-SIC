@@ -70,11 +70,19 @@ def return_df(program):
     df = pd.DataFrame(dict)
     # Creating END directive if it doesn't exist
     if df.iloc[df.index.stop -1].Mnemonic != 'END':
-        df2 = pd.DataFrame([[' ', 'END', ' ']], columns=df.columns)
+        df2 = pd.DataFrame([[' ', 'END', df.iloc[0].Value]], columns=df.columns)
         df = pd.concat([df, df2], ignore_index = True)
         print('NO END DIRECTIVE FOUND, CREATED ONE')
     print("DATA PARSING IS DONE")
     return df
+
+
+# Makes the main direcory and handles if it exists already
+def make_directory():
+    folder_name = 'outputs'
+    if not os.path.exists(folder_name):
+        os.makedirs(folder_name)
+    return
 
 
 # Creates a text file and writes the dataframe inside of it
@@ -91,18 +99,22 @@ def return_intermediate(df):
     print('INTERMEDIATE FILE GENERATED')
     return
 
-# Makes the main direcory and handles if it exists already
-def make_directory():
-    folder_name = 'outputs'
-    if not os.path.exists(folder_name):
-        os.makedirs(folder_name)
+
+
+# Crates a text file and write the full program inside of it
+def out_pass1(df):
+    fout = open("outputs/out_pass1.txt", "wt")
+    for ind in df.index:
+        fout.write('{0}\t{1}\t{2}\t{3}\n'.format(df.Location_Counter[ind].ljust(8, ' '), df.Label[ind].ljust(8, ' '), df.Mnemonic[ind].ljust(8, ' '), df.Value[ind]).ljust(8, ' '))
+    fout.close()
+    print('OUT PASS 1 FILE GENERATED')
     return
 
 # Crates a text file and write the symbol table inside of it
 def return_symbol_table(list):
-    fout = open("outputs/Symbol_Table.txt", "wt")
+    fout = open("outputs/symTable.txt", "wt")
     for row in list:
-        fout.write('{0}\t{1}\n'.format(row[0], row[1]))
+        fout.write('{0}\t{1}\n'.format(row[0].ljust(8, ' '), row[1]))
     fout.close()
     print('SYMBOL TABLE FILE GENERATED')
     return
