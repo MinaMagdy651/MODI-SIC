@@ -73,7 +73,6 @@ def return_df(program):
         df2 = pd.DataFrame([[' ', 'END', df.iloc[0].Value]], columns=df.columns)
         df = pd.concat([df, df2], ignore_index = True)
         print('NO END DIRECTIVE FOUND, CREATED ONE')
-    print("DATA PARSING IS DONE")
     return df
 
 
@@ -107,14 +106,17 @@ def out_pass1(df):
     for ind in df.index:
         fout.write('{0}\t{1}\t{2}\t{3}\n'.format(df.Location_Counter[ind].ljust(8, ' '), df.Label[ind].ljust(8, ' '), df.Mnemonic[ind].ljust(8, ' '), df.Value[ind]).ljust(8, ' '))
     fout.close()
-    print('OUT PASS 1 FILE GENERATED')
+    print('OUT PASS ONE FILE GENERATED')
     return
 
 # Crates a text file and write the symbol table inside of it
 def return_symbol_table(list):
     fout = open("outputs/symTable.txt", "wt")
-    for row in list:
-        fout.write('{0}\t{1}\n'.format(row[0].ljust(8, ' '), row[1]))
+    for dic in list:
+        for key, value in dic.items():
+            fout.write('{0}\t{1}\n'.format(key.ljust(8, ' '), value))
+
     fout.close()
     print('SYMBOL TABLE FILE GENERATED')
     return
+

@@ -1,12 +1,6 @@
-import utils
-import pass_1
+from utils import make_directory
+from pass_1 import pass_one
 
 
-utils.make_directory()
-program = utils.open_file('in.txt')
-df = utils.return_df(program)
-utils.return_intermediate(df)
-df = pass_1.location_counter(df)
-symbol_table = pass_1.symbol_table(df)
-utils.return_symbol_table(symbol_table)
-utils.out_pass1(df)
+make_directory()
+pass_one_df, sym_table = pass_one()

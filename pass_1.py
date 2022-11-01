@@ -1,5 +1,6 @@
 import pandas as pd
 from instructions import instructions
+from utils import open_file, return_df, return_intermediate, return_symbol_table, out_pass1
 
 # Adds Location Counter to the dataframe
 def location_counter(df):
@@ -56,5 +57,27 @@ def symbol_table(df):
     # Ignoring the first row 
     for ind in range(1, df.index.stop):
         if df.Label[ind] != ' ':
-            list.append([df.Label[ind], df.Location_Counter[ind]])
+            list.append({df.Label[ind]:df.Location_Counter[ind]})
     return list
+
+
+def pass_one():
+    print('-' * 30)
+    print('*' *5 + ' PARSING STARTED ' + '*' *5)
+    program = open_file('in.txt')
+    df = return_df(program)
+    return_intermediate(df)
+    print('*' *5 + ' PARSING ENDED ' + '*' *5)
+    print('-' * 30)
+    print("\n")
+
+    print('-' * 30)
+    print('*' *5 + ' PASS ONE STARTED '+ '*' *5)
+    df = location_counter(df)
+    sym_table = symbol_table(df)
+    return_symbol_table(sym_table)
+    out_pass1(df)
+    print('*' *5 + ' PASS ONE ENDED ' + '*' *5)
+    print('-' * 30)
+    print("\n")
+    return df, sym_table
