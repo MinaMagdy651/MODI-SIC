@@ -40,12 +40,21 @@ def location_counter(df):
             temp = hex(int(counter, 16) + int(df.Value[i]) *3)
             
         if df.Mnemonic[i] == 'RESB':
-            temp = hex(int(counter, 16) + (int(df.Value[i])))
+            temp = hex(int(counter, 16) + int(df.Value[i]))
             
             
         # Saving the new counter, and truncating the 0x at the beginning of the hex number
         counter = temp.split('x')[1].rjust(4, '0').upper()
         list_counter.append(counter)
     # Adding the location counter to the dataframe
-    df.insert(0, 'Location Counter', list_counter[:-1])
+    df.insert(0, 'Location_Counter', list_counter[:-1])
     return df
+
+# Returns list with symbol table inside of it
+def symbol_table(df):
+    list = []
+    # Ignoring the first row 
+    for ind in range(1, df.index.stop):
+        if df.Label[ind] != ' ':
+            list.append([df.Location_Counter[ind], df.Label[ind]])
+    return list

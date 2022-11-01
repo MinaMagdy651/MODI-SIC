@@ -83,6 +83,7 @@ def return_intermediate(df):
             fout.write('{0}\t{1}\t{2}\n'.format(df.Label[ind].ljust(8, ' '), df.Mnemonic[ind].ljust(8, ' '), df.Value[ind].ljust(8, ' ')))
             
     fout.close()
+    print('INTERMEDIATE FILE GENERATED')
     return
 
 # Makes the main direcory and handles if it exists already
@@ -92,3 +93,11 @@ def make_directory():
         os.makedirs(folder_name)
     return
 
+# Crates a text file and write the symbol table inside of it
+def return_symbol_table(list):
+    fout = open("outputs/Symbol_Table.txt", "wt")
+    for row in list:
+        fout.write('{0}\t{1}\n'.format(row[0], row[1]))
+    fout.close()
+    print('SYMBOL TABLE FILE GENERATED')
+    return
