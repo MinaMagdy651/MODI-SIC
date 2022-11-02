@@ -1,5 +1,5 @@
 import pandas as pd
-from instructions import instructions
+from instructions import instructions, directives
 import re
 import os
 from pathlib import Path
@@ -10,9 +10,13 @@ def open_file(file):
         program = [re.sub(r'\s+', ' ', line).strip().upper() for line in f]
     return program
 
+# Return program name
 def prog_name(df):
     return df.iloc[0].Label.ljust(6, 'x')
 
+# Checks if instrction or directive
+def is_instruction_directive(string):
+    return string in instructions or string in directives
 
 # Parsing and returning the main data frame
 def return_df(program):
@@ -22,9 +26,10 @@ def return_df(program):
         # Removing the indeces and a part of the comment, no instruction will exceed 3 columns
         temp = line.split(" ")[1: 4]
 
-        # Deleting comments
+        # Empty line
         if len(temp) < 1:
             continue
+        # Deleting comments
         if temp[0] == '.':
             continue
 
@@ -32,11 +37,17 @@ def return_df(program):
         if temp[0] in instructions:
             temp = temp[: 2] 
         
+        # Checks if instruction or not
+        if not is_instruction_directive(temp[0]) and not is_instruction_directive(temp[1]):
+            print('{} or {} is not found'.format(temp[0], temp[1]))
+            quit()
+        
         # RSUB instruction and end no label
         if temp[0] == 'RSUB':
             label = ' '
             mnemonic = temp[0] 
             value = ' '
+
         # END INSTRUCTION
         elif temp[0]  == 'END':
             label = ' '
@@ -68,11 +79,13 @@ def return_df(program):
             'Value': value
         })
     df = pd.DataFrame(dict)
+    
     # Creating END directive if it doesn't exist
     if df.iloc[df.index.stop -1].Mnemonic != 'END':
         df2 = pd.DataFrame([[' ', 'END', df.iloc[0].Value]], columns=df.columns)
         df = pd.concat([df, df2], ignore_index = True)
         print('NO END DIRECTIVE FOUND, CREATED ONE')
+
     return df
 
 
@@ -112,9 +125,8 @@ def out_pass1(df):
 # Crates a text file and write the symbol table inside of it
 def return_symbol_table(list):
     fout = open("outputs/symTable.txt", "wt")
-    for dic in list:
-        for key, value in dic.items():
-            fout.write('{0}\t{1}\n'.format(key.ljust(8, ' '), value))
+    for key, value in list.items():
+        fout.write('{0}\t{1}\n'.format(key.ljust(8, ' '), value))
 
     fout.close()
     print('SYMBOL TABLE FILE GENERATED')

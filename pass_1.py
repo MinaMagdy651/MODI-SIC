@@ -5,7 +5,7 @@ from utils import open_file, return_df, return_intermediate, return_symbol_table
 # Adds Location Counter to the dataframe
 def location_counter(df):
     start_index = df.Value[0]
-    list_counter = [" ", start_index]
+    list_counter = [' ', start_index]
     counter = start_index
 
     for i in range(1, df.index.stop):
@@ -53,18 +53,18 @@ def location_counter(df):
 
 # Returns list with symbol table inside of it
 def symbol_table(df):
-    list = []
+    list = {}
     # Ignoring the first row 
-    for ind in range(1, df.index.stop):
-        if df.Label[ind] != ' ':
-            list.append({df.Label[ind]:df.Location_Counter[ind]})
+    for i in range(1, df.index.stop):
+        if df.Label[i] != ' ':
+            list[df.Label[i]] = df.Location_Counter[i]
     return list
 
 
 def pass_one():
     print('-' * 30)
     print('*' *5 + ' PARSING STARTED ' + '*' *5)
-    program = open_file('in.txt')
+    program = open_file('in2.txt')
     df = return_df(program)
     return_intermediate(df)
     print('*' *5 + ' PARSING ENDED ' + '*' *5)
