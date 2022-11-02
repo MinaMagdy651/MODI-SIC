@@ -1,4 +1,3 @@
-import imp
 from utils import make_directory
 from pass_1 import pass_one
 from pass_2 import pass_two

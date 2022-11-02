@@ -1,13 +1,19 @@
-        	PROG3   	START   	0030
-0030    	WRREC   	LDX     	ZERO
-0033    	WLOOP   	TD      	OUTPUT
-0036    	        	JEQ     	WLOOP
-0039    	        	LDCH    	RECORD,X
-003C    	        	WD      	OUTPUT
-003F    	        	TIX     	LENGTH
-0042    	        	JLT     	WLOOP
-0045    	ZERO    	WORD    	0
-0048    	LENGTH  	WORD    	1
-004B    	OUTPUT  	BYTE    	X'05'
-004C    	RECORD  	RESB    	100
-00B0    	        	END     	0030
+        	PROG1   	START   	0000
+0000    	        	LDA     	ZERO
+0003    	        	STA     	INDEX
+0006    	LOOP    	LDX     	INDEX
+0009    	        	LDA     	ZERO
+000C    	        	STA     	ALPHA,X
+000F    	        	LDA     	INDEX
+0012    	        	ADD     	THREE
+0015    	        	STA     	INDEX
+0018    	        	COMP    	K300
+001B    	        	TIX     	TWENTY
+001E    	        	JLT     	LOOP
+0021    	INDEX   	RESW    	1
+0024    	ALPHA   	RESW    	100
+0150    	ZERO    	WORD    	0
+0153    	K300    	WORD    	100
+0156    	THREE   	WORD    	3
+0159    	TWENTY  	WORD    	20
+015C    	        	END     	0000

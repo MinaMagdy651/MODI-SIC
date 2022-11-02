@@ -132,3 +132,19 @@ def return_symbol_table(list):
     print('SYMBOL TABLE FILE GENERATED')
     return
 
+# Crates a text file and write the full program inside of it
+def out_pass2(df):
+    fout = open("outputs/out_pass2.txt", "wt")
+    for ind in df.index:
+        fout.write('{0}\t{1}\t{2}\t{3}\t{4}\n'.format(df.Location_Counter[ind].ljust(8, ' '), df.Label[ind].ljust(8, ' '), df.Mnemonic[ind].ljust(8, ' '), df.Value[ind].ljust(8, ' '), df.Object_code[ind]))
+    fout.close()
+    print('OUT PASS TWO FILE GENERATED')
+    return
+
+def hte_record_out(list):
+    fout = open("outputs/HTE.txt", "wt")
+    for item in list:
+        fout.write(item + '\n')
+    fout.close()
+    print('HTE RECORD FILE GENERATED')
+    return
