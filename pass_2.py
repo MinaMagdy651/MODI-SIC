@@ -55,10 +55,8 @@ def object_code(df, sym_table):
                 object_code = df.Value[i].split('\'')[1].upper()
             else:
                 string = df.Value[i].split('\'')[1]
-                object_code = ' '
-                # Getting the ascii value
-                for ascii_value in string.encode('ascii'):
-                    object_code += str(ascii_value)
+                # From ascii to hex
+                object_code = string.encode('utf-8').hex().upper()
         # Directives           
         else:
             object_code = ' '

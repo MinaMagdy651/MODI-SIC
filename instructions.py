@@ -32,4 +32,5 @@ instructions = {
     'SIO': ['F0', 1],
     'TIO': ['F8', 1],
 }
+
 directives = ['START', 'END', 'BYTE', 'WORD', 'RESB', 'RESW']
