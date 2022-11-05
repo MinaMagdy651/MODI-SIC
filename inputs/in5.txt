@@ -10,6 +10,8 @@
 7			COMP 		K300
 7			TIX 		TWENTY
 7			JLT		LOOP
+7			FLOAT				ddddddd
+8			LDA		#8
 7 INDEX		RESW		1
 7 ALPHA		RESW		100
 7 ZERO		WORD		0
@@ -18,4 +20,3 @@
 7 TWENTY		WORD		20
 7			END		0000
 		
-	

@@ -14,78 +14,73 @@ def open_file(file):
 def prog_name(df):
     return df.iloc[0].Label.ljust(6, 'x')
 
-# Checks if instrction or directive
-def is_instruction_directive(string):
-    return string in instructions or string in directives
-
 # Parsing and returning the main data frame
 def return_df(program):
     dict = []
     for line in program:
-        
-        # Removing the indeces and a part of the comment, no instruction will exceed 3 columns
-        temp = line.split(" ")[1: 4]
-
-        # Empty line
-        if len(temp) < 1:
+        line = line.split(" ")[1: 4]
+        # Removing comments and empty lines
+        if len(line) < 1 or line[0] == '.':
             continue
-        # Deleting comments
-        if temp[0] == '.':
-            continue
-
-        # If the first column is an instruction then there is no label, so the 3rd coloumn is a comment
-        if temp[0] in instructions:
-            temp = temp[: 2] 
-        
-        # Checks if instruction or not
-        if not is_instruction_directive(temp[0]) and not is_instruction_directive(temp[1]):
-            print('{} or {} is not found'.format(temp[0], temp[1]))
-            quit()
-        
-        # RSUB instruction and end no label
-        if temp[0] == 'RSUB':
+            
+        # If the first one is an instruction, then there is no label
+        if line[0] in instructions or line[0] == 'END':
+            line = line[: 2]
+            
+        # RSUB without label
+        if line[0] == 'RSUB':
             label = ' '
-            mnemonic = temp[0] 
+            mnemonic = line[0]
             value = ' '
-
-        # END INSTRUCTION
-        elif temp[0]  == 'END':
-            label = ' '
-            mnemonic = temp[0]
-            value = temp[1]
-
-        # RSUB instruction with label
-        elif temp[1] == 'RSUB':
-            label = temp[0]
-            mnemonic = temp[1]
-            value = ' '
-
-        # Fromat 1, 3 instruction without label
-        elif temp[0] in instructions :
-            label = ' '
-            mnemonic = temp[0]
-            value = temp[1]
-
-        # Fromat 1, 3 instruction with label
-        elif len(temp) >= 3:
-            label = temp[0]
-            mnemonic = temp[1]
-            value = temp[2]
+            
         
-        # Appending a dictionary to the list of dictioneries
+        # RSUB with label
+        elif len(line) >= 2 and line[1] == 'RSUB':
+            label = line[0]
+            mnemonic = line[1]
+            value = ' '
+            
+         # End Directive
+        elif line[0] == 'END':
+            label = ' '
+            mnemonic = line[0]
+            value = line[1]
+        
+        # No label
+        elif line[0] in instructions:
+            # Format 1 no label
+            if type(instructions[line[0]]) == list:
+                label = ' '
+                mnemonic = line[0]
+                value = ' '
+
+            # Format 3 no label
+            else:
+                label = ' '
+                mnemonic = line[0]
+                value = line[1]
+                        
+        # Format 1 with label
+        elif len(line) >= 2 and line[1] in instructions and type(instructions[line[1]]) == list:
+                label = line[0]
+                mnemonic = line[1]
+                value = ' '
+        # Format 3 with label and directives
+        else:
+            label = line[0]
+            mnemonic = line[1]
+            value = line[2]
+            
         dict.append({
             'Label':label,
             'Mnemonic': mnemonic,
             'Value': value
         })
     df = pd.DataFrame(dict)
-    
     # Creating END directive if it doesn't exist
     if df.iloc[df.index.stop -1].Mnemonic != 'END':
         df2 = pd.DataFrame([[' ', 'END', df.iloc[0].Value]], columns=df.columns)
         df = pd.concat([df, df2], ignore_index = True)
-        print('NO END DIRECTIVE FOUND, CREATED ONE')
-
     return df
 
 
@@ -110,8 +105,6 @@ def return_intermediate(df):
     fout.close()
     print('INTERMEDIATE FILE GENERATED')
     return
-
-
 
 # Crates a text file and write the full program inside of it
 def out_pass1(df):

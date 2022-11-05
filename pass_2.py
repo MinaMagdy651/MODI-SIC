@@ -4,40 +4,49 @@ from utils import out_pass2, prog_name, hte_record_out
 
 # Returns the object code 
 def object_code(df, sym_table):
-    # First line has no object code, so we are ignoring it
     object_code_list = [' ']
+    # First line has no object code, so we are ignoring it
     for i in range(1, df.index.stop):
         if df.Mnemonic[i] in instructions:
+            # RSUB instruction
             if df.Mnemonic[i] == 'RSUB':
                 object_code = "4C0000"
             
-            # Instruction 3 format
-            elif type(instructions[df.Mnemonic[i]]) != list :
+            # Format 3
+            elif type(instructions[df.Mnemonic[i]]) != list:
                 # Getting the hex value of the instruction then transfering it to binary and removing the 0b indicator
                 # Then filling it in 7 bytes
                 op_code = bin(int(instructions[df.Mnemonic[i]], 16))[2: -1].rjust(7, '0')
-                
+
                 # Checking the immidiate value
                 op_code += '1' if df.Value[i][0] == '#'  else  '0'
-                
+
                 # Checking for indirect accesing, 'BUFFER, X'
                 op_code_index = op_code
                 op_code_index += '1' if len(df.Value[i].split(',')) > 1 else  '0'
-                
+
+                # Format 3, immidiate 
+                if df.Value[i][0] == '#':
+                    immidiate = bin(int(df.Value[i].split('#')[1], 16))[2: ].rjust(15, '0')
+                    object_code = op_code_index + immidiate
+
+                # Format 3, normal    
+                elif df.Value[i][0] != '#':
+                    address = sym_table[df.Value[i].split(',')[0]]
+                    address_binary = bin(int(address, 16))[2: ].rjust(15, '0')
+                    object_code = op_code_index + address_binary
+                    
                 # Making sure the value exists in the symbol table
-                if df.Value[i].split(',')[0] not in sym_table:
+                elif df.Value[i].split(',')[0] not in sym_table:
                     print('VARIABLE {0} DOES NOT EXIST'.format(df.Value[i].split(',')[0]))
                     quit()
-                # Getting the address as hex then transfering it to binary and fitting it in 15 bits
-                address = sym_table[df.Value[i].split(',')[0]]
-                address_binary = bin(int(address, 16))[2: ].rjust(15, '0')
-
-                # Adding the op code + the immidiate flag and the X flag to the address
-                object_code = op_code_index + address_binary
-                
-                # Trasforming the object code from binary to decimal and fitting it in 6 digits
+                 # Trasforming the object code from binary to decimal and fitting it in 6 digits
                 object_code = hex(int(object_code, 2))[2: ].rjust(6, '0').upper()
-                
+
+            # Format 1     
+            else:
+                object_code = instructions[df.Mnemonic[i]][0]
+
         elif df.Mnemonic[i] == 'WORD':
             object_code = hex(int(df.Value[i]))[2: ].rjust(6, '0').upper()
         
@@ -46,12 +55,11 @@ def object_code(df, sym_table):
                 object_code = df.Value[i].split('\'')[1].upper()
             else:
                 string = df.Value[i].split('\'')[1]
-                object_code = ''
+                object_code = ' '
                 # Getting the ascii value
                 for ascii_value in string.encode('ascii'):
                     object_code += str(ascii_value)
-        
-        # Directives            
+        # Directives           
         else:
             object_code = ' '
         object_code_list.append(object_code)

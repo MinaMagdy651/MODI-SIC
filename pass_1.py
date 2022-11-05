@@ -61,10 +61,10 @@ def symbol_table(df):
     return list
 
 
-def pass_one():
+def pass_one(path):
     print('-' * 30)
     print('*' *5 + ' PARSING STARTED ' + '*' *5)
-    program = open_file('in4.txt')
+    program = open_file(path+ '.txt')
     df = return_df(program)
     return_intermediate(df)
     print('*' *5 + ' PARSING ENDED ' + '*' *5)
