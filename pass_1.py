@@ -1,5 +1,5 @@
 import pandas as pd
-from instructions import instructions
+from instructions import instructions, directives
 from utils import open_file, return_df, return_intermediate, return_symbol_table, out_pass1
 
 # Adds Location Counter to the dataframe
@@ -10,7 +10,11 @@ def location_counter(df):
 
     for i in range(1, df.index.stop):
 
-        if df.Mnemonic[i] in instructions:
+        if df.Mnemonic[i] not in instructions and df.Mnemonic[i] not in directives:
+            print('NO INSTRUCTION/DIRECTIVE NAMED {0}'.format(df.Mnemonic[i]))
+            quit()
+        
+        elif df.Mnemonic[i] in instructions:
             # Format 1 instruction
             if type(instructions[df.Mnemonic[i]]) == list:
                 temp = hex(int(counter, 16) + 1)
@@ -27,8 +31,11 @@ def location_counter(df):
             length = len(value[1])
             if value[0] == 'C':
                 temp = hex(int(counter, 16) + int(length))
-            else:
+            elif value[0] == 'X':
                 temp = hex(int(counter, 16) + int(int(length)/2))
+            else:
+                print('INVALID VALUE FOR BYTE')
+                quit()
 
         # hex functions deals with integers ONLY
         # Counter is saved as a string hex value

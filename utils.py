@@ -81,6 +81,7 @@ def return_df(program):
     if df.iloc[df.index.stop -1].Mnemonic != 'END':
         df2 = pd.DataFrame([[' ', 'END', df.iloc[0].Value]], columns=df.columns)
         df = pd.concat([df, df2], ignore_index = True)
+        print('END DIRECTIVE NOT FOUND, GENERATED ONE')
     return df
 
 
