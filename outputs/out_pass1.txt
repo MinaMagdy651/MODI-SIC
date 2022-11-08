@@ -1,0 +1,8 @@
+        	COPY    	START   	0000
+0000    	FIRST   	STL     	RETADR
+0003    	        	LDA     	NOTHING
+0006    	RETADR  	LDA     	#100
+0009    	        	STCH    	#100
+000C    	        	HIO     	 
+000D    	NOTHING 	FLOAT   	 
+000E    	        	END     	0000

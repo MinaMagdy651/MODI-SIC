@@ -27,19 +27,21 @@ def object_code(df, sym_table):
 
                 # Format 3, immidiate 
                 if df.Value[i][0] == '#':
-                    immidiate = bin(int(df.Value[i].split('#')[1], 16))[2: ].rjust(15, '0')
+                    immidiate = bin(int(df.Value[i].split('#')[1]))[2: ].rjust(15, '0')
                     object_code = op_code_index + immidiate
 
+                # Making sure the value exists in the symbol table
+                elif df.Value[i].split(',')[0] not in sym_table:
+                    print('VARIABLE {0} DOES NOT EXIST'.format(df.Value[i].split(',')[0]))
+                    quit()
+                    
                 # Format 3, normal    
                 elif df.Value[i][0] != '#':
                     address = sym_table[df.Value[i].split(',')[0]]
                     address_binary = bin(int(address, 16))[2: ].rjust(15, '0')
                     object_code = op_code_index + address_binary
                     
-                # Making sure the value exists in the symbol table
-                elif df.Value[i].split(',')[0] not in sym_table:
-                    print('VARIABLE {0} DOES NOT EXIST'.format(df.Value[i].split(',')[0]))
-                    quit()
+                
                  # Trasforming the object code from binary to decimal and fitting it in 6 digits
                 object_code = hex(int(object_code, 2))[2: ].rjust(6, '0').upper()
 

@@ -64,6 +64,9 @@ def symbol_table(df):
     # Ignoring the first row 
     for i in range(1, df.index.stop):
         if df.Label[i] != ' ':
+            if df.Label[i] in list:
+                print('LABEL {0} ALREADY EXISTS'.format(df.Label[i]))
+                quit()
             list[df.Label[i]] = df.Location_Counter[i]
     return list
 
